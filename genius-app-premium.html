@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Гений">
+    <meta name="theme-color" content="#000000">
+    <title>ГЕНИЙ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --bg-gradient: linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
+            --card: rgba(28, 28, 30, 0.7);
+            --card-hover: rgba(44, 44, 46, 0.8);
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --border: rgba(255,255,255,0.08);
+            --text: #ffffff;
+            --text-secondary: rgba(255,255,255,0.7);
+            --text-muted: rgba(255,255,255,0.4);
+            --accent: #0a84ff;
+            --accent-glow: rgba(10, 132, 255, 0.3);
+            --green: #30d158;
+            --orange: #ff9f0a;
+            --purple: #bf5af2;
+            --red: #ff453a;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(10, 132, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(191, 90, 242, 0.08) 0%, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text);
+            line-height: 1.4;
+            padding-bottom: calc(var(--safe-bottom) + 20px);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* Header with Glassmorphism */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            padding: calc(var(--safe-top) + 16px) 16px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--glass-border);
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.8) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header-btn:hover {
+            background: var(--card-hover);
+            transform: scale(1.05);
+        }
+
+        .header-btn:active { 
+            transform: scale(0.95);
+        }
+
+        /* Premium Add Button */
+        .add-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #0a84ff 0%, #0066cc 100%);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 20px;
+            box-shadow: 
+                0 8px 24px rgba(10, 132, 255, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .add-btn:hover::before {
+            left: 100%;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 32px rgba(10, 132, 255, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+        }
+
+        .add-btn:active { 
+            transform: translateY(0);
+        }
+
+        /* Glass Tabs */
+        .tabs {
+            display: flex;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 4px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .tab.active {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--text);
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .tab-badge {
+            display: inline-block;
+            min-width: 20px;
+            padding: 2px 7px;
+            background: linear-gradient(135deg, var(--accent) 0%, #0066cc 100%);
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 800;
+            margin-left: 6px;
+            color: white;
+            box-shadow: 0 2px 8px var(--accent-glow);
+        }
+
+        /* View Toggle */
+        .view-toggle {
+            display: flex;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 4px;
+            margin-bottom: 16px;
+        }
+
+        .view-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .view-btn.active {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--text);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .ctrl-btn {
+            flex: 1;
+            padding: 12px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .ctrl-btn:hover {
+            background: var(--card-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .ctrl-btn:active { 
+            transform: translateY(0);
+        }
+
+        /* Premium Cards */
+        .cards {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .cards.hidden { display: none; }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 18px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 12px 32px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card-date {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.2px;
+        }
+
+        .card-tag {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            color: var(--text-secondary);
+        }
+
+        .card-hook {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.5;
+            letter-spacing: -0.3px;
+        }
+
+        .card-visual {
+            width: 100%;
+            max-height: 220px;
+            object-fit: cover;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .stat span { 
+            font-weight: 800;
+            margin-left: 2px;
+        }
+        .stat.views span { color: var(--accent); }
+        .stat.shares span { color: var(--purple); }
+        .stat.comments span { color: var(--green); }
+        .stat.subs span { color: var(--orange); }
+
+        .card-insight {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .card-idea {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding: 12px 14px;
+            background: rgba(191, 90, 242, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-left: 3px solid var(--purple);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            line-height: 1.5;
+            box-shadow: 0 4px 12px rgba(191, 90, 242, 0.2);
+        }
+
+        .card-idea-label {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--purple);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .card-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-btn.open {
+            background: linear-gradient(135deg, var(--accent) 0%, #0066cc 100%);
+            color: white;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .card-btn.open:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--accent-glow);
+        }
+
+        .card-btn.edit {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text);
+            flex: 0.5;
+        }
+
+        .card-btn.edit:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .card-btn.delete {
+            background: rgba(255, 69, 58, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 69, 58, 0.3);
+            color: var(--red);
+            flex: 0.5;
+        }
+
+        .card-btn.delete:hover {
+            background: rgba(255, 69, 58, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .card-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Table View */
+        .table-container {
+            display: none;
+            overflow-x: auto;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .table-container.visible { display: block; }
+
+        .data-table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .data-table th {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 700;
+            color: var(--text-muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+        }
+
+        .data-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            color: var(--text-secondary);
+        }
+
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover td {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .data-table .hook-cell {
+            color: var(--text);
+            font-weight: 600;
+            max-width: 150px;
+        }
+
+        .data-table .num-cell {
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .data-table .num-cell.views { color: var(--accent); }
+        .data-table .num-cell.shares { color: var(--purple); }
+        .data-table .num-cell.comments { color: var(--green); }
+        .data-table .num-cell.subs { color: var(--orange); }
+
+        .table-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            transition: opacity 0.2s;
+        }
+
+        .table-link:hover { opacity: 0.7; }
+
+        .table-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .table-action {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .table-action:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.1);
+        }
+
+        .table-action:active { transform: scale(0.95); }
+        .table-action.del { color: var(--red); }
+
+        /* Empty */
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-icon { 
+            font-size: 48px; 
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+        .empty-text { 
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 28px 0;
+        }
+
+        /* Section */
+        .section-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        /* Premium Streak */
+        .streak-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--glass);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .streak-row:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .streak-fire { 
+            font-size: 32px;
+            filter: drop-shadow(0 4px 12px rgba(255, 159, 10, 0.5));
+        }
+
+        .streak-num {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--orange) 0%, #ff6b00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .streak-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .streak-days {
+            display: flex;
+            gap: 5px;
+            margin-left: auto;
+        }
+
+        .streak-day {
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+
+        .streak-day.active {
+            background: linear-gradient(135deg, var(--orange) 0%, #ff6b00 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 159, 10, 0.4);
+        }
+
+        .streak-day.today {
+            box-shadow: 0 0 0 2px var(--orange);
+            transform: scale(1.1);
+        }
+
+        /* Stats */
+        .stats-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-box {
+            flex: 1;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 18px 16px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .stat-box-value {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .stat-box-value.blue { 
+            background: linear-gradient(135deg, var(--accent) 0%, #0066cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-box-value.green { 
+            background: linear-gradient(135deg, var(--green) 0%, #20a040 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-box-value.purple { 
+            background: linear-gradient(135deg, var(--purple) 0%, #9040d0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-box-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* Premium Button */
+        .ach-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(255, 214, 10, 0.2) 0%, rgba(255, 159, 10, 0.2) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 214, 10, 0.3);
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 800;
+            color: #ffd60a;
+            cursor: pointer;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 16px rgba(255, 214, 10, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .ach-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 214, 10, 0.3);
+            border-color: rgba(255, 214, 10, 0.5);
+        }
+
+        .ach-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Modal */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 100;
+            align-items: flex-end;
+            animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-bg.show { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: rgba(28, 28, 30, 0.95);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px 24px 0 0;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 20px 24px calc(var(--safe-bottom) + 24px);
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-handle {
+            width: 40px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            margin: 0 auto 18px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            color: var(--text);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.1);
+        }
+
+        .modal-close:active {
+            transform: scale(0.95);
+        }
+
+        .form-group { margin-bottom: 18px; }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            font-size: 16px;
+            color: var(--text);
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.2);
+        }
+
+        .form-input::placeholder { color: var(--text-muted); }
+
+        textarea.form-input {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-row .form-group { flex: 1; }
+
+        /* Tags */
+        .tags-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .tag-btn {
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tag-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .tag-btn.selected {
+            background: rgba(10, 132, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .custom-tag-input {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            font-size: 13px;
+            color: var(--text);
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .custom-tag-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.2);
+        }
+
+        .custom-tag-input::placeholder { color: var(--text-muted); }
+
+        .visual-upload {
+            border: 2px dashed var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.03);
+            transition: all 0.3s;
+        }
+
+        .visual-upload:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--accent);
+        }
+
+        .visual-upload:active { 
+            transform: scale(0.98);
+        }
+
+        .visual-upload-icon { 
+            font-size: 28px; 
+            margin-bottom: 6px;
+        }
+        .visual-upload-text { 
+            font-size: 13px; 
+            font-weight: 600;
+            color: var(--text-muted); 
+        }
+
+        .visual-preview {
+            width: 100%;
+            max-height: 180px;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent) 0%, #0066cc 100%);
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 800;
+            color: white;
+            cursor: pointer;
+            margin-top: 8px;
+            box-shadow: 0 6px 20px var(--accent-glow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px var(--accent-glow);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .cancel-btn {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: none;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.2s;
+        }
+
+        .cancel-btn:hover {
+            color: var(--text-secondary);
+        }
+
+        /* Filter Chips */
+        .filter-chips {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .filter-chip {
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-chip:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .filter-chip.active {
+            background: linear-gradient(135deg, white 0%, rgba(255,255,255,0.9) 100%);
+            color: var(--bg);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: calc(var(--safe-bottom) + 24px);
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: black;
+            padding: 14px 24px;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 700;
+            z-index: 200;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast-undo {
+            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.12);
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toast-undo:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .toast-undo:active {
+            transform: scale(0.95);
+        }
+
+        /* Achievement Popup */
+        .ach-popup {
+            position: fixed;
+            top: calc(var(--safe-top) + 60px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-40px);
+            background: linear-gradient(135deg, #ffd60a 0%, #ff9f0a 100%);
+            padding: 14px 24px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 300;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px rgba(255, 214, 10, 0.5);
+        }
+
+        .ach-popup.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .ach-popup-text {
+            font-size: 16px;
+            font-weight: 800;
+            color: black;
+        }
+
+        /* Confetti */
+        .confetti-box {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Achievement Grid */
+        .ach-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .ach-item {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .ach-item:hover {
+            transform: translateY(-4px);
+        }
+
+        .ach-item.unlocked {
+            background: rgba(255, 214, 10, 0.15);
+            border: 1px solid rgba(255, 214, 10, 0.3);
+            box-shadow: 0 4px 16px rgba(255, 214, 10, 0.2);
+        }
+
+        .ach-item.locked { opacity: 0.5; }
+        
+        .ach-icon { 
+            font-size: 32px; 
+            margin-bottom: 6px;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+        }
+        .ach-name { 
+            font-size: 12px; 
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+        .ach-desc { 
+            font-size: 10px; 
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .ach-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .ach-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd60a 0%, #ff9f0a 100%);
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Top */
+        .top-item {
+            display: flex;
+            gap: 12px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        .top-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(4px);
+        }
+
+        .top-rank {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 900;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .top-rank.r1 { 
+            background: linear-gradient(135deg, #ffd60a 0%, #ff9f0a 100%); 
+            color: black;
+            box-shadow: 0 4px 12px rgba(255, 214, 10, 0.4);
+        }
+        .top-rank.r2 { 
+            background: linear-gradient(135deg, #e0e0e0 0%, #a0a0a0 100%); 
+            color: black;
+        }
+        .top-rank.r3 { 
+            background: linear-gradient(135deg, #cd7f32 0%, #a05a2c 100%); 
+            color: white;
+        }
+
+        .top-content { flex: 1; min-width: 0; }
+        .top-hook { 
+            font-size: 14px; 
+            font-weight: 700; 
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+        .top-stats { 
+            font-size: 12px; 
+            font-weight: 600;
+            color: var(--text-muted); 
+        }
+
+        .top-tabs {
+            display: flex;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 14px;
+            padding: 4px;
+            margin-bottom: 16px;
+        }
+
+        .top-tab {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .top-tab.active {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--text);
+        }
+
+        /* Settings */
+        .settings-group {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 18px;
+        }
+
+        .settings-item {
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .settings-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .settings-item:last-child { border-bottom: none; }
+
+        .settings-label {
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .settings-action {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .settings-action:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
+        }
+
+        .settings-action:active {
+            transform: scale(0.95);
+        }
+
+        .top-list {
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        /* Scrollbar */
+        .top-list::-webkit-scrollbar,
+        .modal::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .top-list::-webkit-scrollbar-track,
+        .modal::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .top-list::-webkit-scrollbar-thumb,
+        .modal::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        .top-list::-webkit-scrollbar-thumb:hover,
+        .modal::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="confetti-box" id="confetti"></div>
+    
+    <div class="ach-popup" id="ach-popup">
+        <span id="ach-popup-icon">🏆</span>
+        <span class="ach-popup-text" id="ach-popup-text">Достижение!</span>
+    </div>
+
+    <header class="header">
+        <h1>🧠 Гений</h1>
+        <button class="header-btn" onclick="openSettings()">⚙️</button>
+    </header>
+
+    <div class="container">
+        <button class="add-btn" onclick="openModal()">+ Добавить анализ</button>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="comp" onclick="switchTab('comp')">
+                Конкуренты <span class="tab-badge" id="comp-badge">0</span>
+            </button>
+            <button class="tab" data-tab="my" onclick="switchTab('my')">
+                Мой контент <span class="tab-badge" id="my-badge">0</span>
+            </button>
+        </div>
+
+        <div class="view-toggle">
+            <button class="view-btn active" data-v="cards" onclick="setView('cards')">🗂️ Карточки</button>
+            <button class="view-btn" data-v="table" onclick="setView('table')">📋 Таблица</button>
+        </div>
+
+        <div class="controls">
+            <button class="ctrl-btn" onclick="openTop()">🏆 Топ</button>
+            <button class="ctrl-btn" onclick="exportCSV()">📊 CSV</button>
+        </div>
+
+        <div id="comp-content">
+            <div class="cards" id="comp-cards"></div>
+            <div class="table-container" id="comp-table"></div>
+        </div>
+
+        <div id="my-content" style="display:none">
+            <div class="cards" id="my-cards"></div>
+            <div class="table-container" id="my-table"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-title">Статистика</div>
+
+        <div class="streak-row">
+            <div class="streak-fire">🔥</div>
+            <div>
+                <div class="streak-num" id="streak-num">0</div>
+                <div class="streak-label">дней подряд</div>
+            </div>
+            <div class="streak-days" id="streak-days"></div>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-box-value blue" id="stat-comp">0</div>
+                <div class="stat-box-label">Конкурентов</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box-value green" id="stat-my">0</div>
+                <div class="stat-box-label">Моих</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box-value purple" id="stat-week">0</div>
+                <div class="stat-box-label">За неделю</div>
+            </div>
+        </div>
+
+        <button class="ach-btn" onclick="openAchievements()">
+            🏆 Достижения <span id="ach-badge">0/6</span>
+        </button>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal-bg" id="modal">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <div class="modal-title" id="modal-title">Новый анализ</div>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+
+            <form id="form">
+                <input type="hidden" id="edit-id">
+                <input type="hidden" id="edit-type">
+
+                <div class="form-group">
+                    <label class="form-label">Хук *</label>
+                    <textarea class="form-input" id="f-hook" placeholder="Что зацепило?" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Ссылка на Reels</label>
+                    <input type="url" class="form-input" id="f-link" placeholder="https://instagram.com/reel/...">
+                </div>
+
+                <div class="form-group" id="visual-group">
+                    <label class="form-label">Скриншот</label>
+                    <div class="visual-upload" id="visual-area" onclick="document.getElementById('visual-file').click()">
+                        <div id="visual-preview">
+                            <div class="visual-upload-icon">📷</div>
+                            <div class="visual-upload-text">Нажми чтобы загрузить</div>
+                        </div>
+                    </div>
+                    <input type="file" id="visual-file" accept="image/*" style="display:none" onchange="handleVisual(this)">
+                    <input type="hidden" id="f-visual">
+                </div>
+
+                <div class="form-row" id="stats-row">
+                    <div class="form-group">
+                        <label class="form-label">Просмотры</label>
+                        <input type="text" class="form-input" id="f-views" placeholder="1.2м">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Репосты</label>
+                        <input type="text" class="form-input" id="f-shares" placeholder="50к">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Комменты</label>
+                        <input type="text" class="form-input" id="f-comments" placeholder="1к">
+                    </div>
+                </div>
+
+                <div class="form-row" id="my-stats-row" style="display:none">
+                    <div class="form-group">
+                        <label class="form-label">Просмотры</label>
+                        <input type="text" class="form-input" id="f-my-views" placeholder="10к">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Подписчики</label>
+                        <input type="text" class="form-input" id="f-subs" placeholder="+150">
+                    </div>
+                </div>
+
+                <div class="form-group" id="format-group">
+                    <label class="form-label">Формат</label>
+                    <div class="tags-row" id="tags">
+                        <button type="button" class="tag-btn" data-v="Голова" onclick="selectTag(this)">🗣️ Голова</button>
+                        <button type="button" class="tag-btn" data-v="Сплит" onclick="selectTag(this)">📱 Сплит</button>
+                        <button type="button" class="tag-btn" data-v="B-roll" onclick="selectTag(this)">🎥 B-roll</button>
+                        <button type="button" class="tag-btn" data-v="Диалог" onclick="selectTag(this)">🎭 Диалог</button>
+                        <input type="text" class="custom-tag-input" id="custom-format" placeholder="Свой..." oninput="onCustomFormat()">
+                    </div>
+                    <input type="hidden" id="f-format">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Инсайт</label>
+                    <textarea class="form-input" id="f-insight" placeholder="Почему сработало?"></textarea>
+                </div>
+
+                <div class="form-group" id="idea-group">
+                    <label class="form-label">Моя идея</label>
+                    <textarea class="form-input" id="f-idea" placeholder="Как использовать?"></textarea>
+                </div>
+
+                <button type="button" class="submit-btn" onclick="save()">Сохранить</button>
+                <button type="button" class="cancel-btn" onclick="closeModal()">Отмена</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Achievements Modal -->
+    <div class="modal-bg" id="ach-modal">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <div class="modal-title">🏆 Достижения</div>
+                <button class="modal-close" onclick="closeAchModal()">✕</button>
+            </div>
+            <div class="ach-grid" id="ach-grid"></div>
+            <button class="cancel-btn" onclick="closeAchModal()">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Top Modal -->
+    <div class="modal-bg" id="top-modal">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <div class="modal-title">🏆 Топ роликов</div>
+                <button class="modal-close" onclick="closeTopModal()">✕</button>
+            </div>
+            <div class="top-tabs">
+                <button class="top-tab active" data-t="comp" onclick="switchTopTab('comp')">Конкуренты</button>
+                <button class="top-tab" data-t="my" onclick="switchTopTab('my')">Мой контент</button>
+            </div>
+            <div class="filter-chips" id="sort-chips">
+                <button class="filter-chip active" data-s="views" onclick="setSort('views')">👀 Просмотры</button>
+                <button class="filter-chip" data-s="shares" onclick="setSort('shares')">🔄 Репосты</button>
+                <button class="filter-chip" data-s="comments" onclick="setSort('comments')">💬 Комменты</button>
+            </div>
+            <div class="top-list" id="top-list"></div>
+            <button class="cancel-btn" onclick="closeTopModal()">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-bg" id="settings-modal">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <div class="modal-title">⚙️ Настройки</div>
+                <button class="modal-close" onclick="closeSettingsModal()">✕</button>
+            </div>
+            <div class="settings-group">
+                <div class="settings-item">
+                    <span class="settings-label">📤 Экспорт данных</span>
+                    <button class="settings-action" onclick="exportJSON()">JSON</button>
+                </div>
+                <div class="settings-item">
+                    <span class="settings-label">📥 Импорт данных</span>
+                    <button class="settings-action" onclick="document.getElementById('import-file').click()">Загрузить</button>
+                    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(this)">
+                </div>
+                <div class="settings-item">
+                    <span class="settings-label">🗑️ Очистить всё</span>
+                    <button class="settings-action" style="color:var(--red)" onclick="clearAll()">Удалить</button>
+                </div>
+            </div>
+            <div class="settings-group">
+                <div class="settings-item">
+                    <span class="settings-label">Версия</span>
+                    <span style="color:var(--text-muted); font-weight: 700;">6.0 Premium</span>
+                </div>
+            </div>
+            <button class="cancel-btn" onclick="closeSettingsModal()">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span id="toast-text">Удалено</span>
+        <button class="toast-undo" id="toast-undo" onclick="undo()">Вернуть</button>
+    </div>
+
+    <script>
+        var compData = [], myData = [], stats = {};
+        var currentTab = 'comp';
+        var currentView = 'cards';
+        var topTab = 'comp';
+        var sortBy = 'views';
+        var deleted = null, deletedFrom = null;
+        var toastTimer = null;
+
+        var achievements = [
+            { id: 'first', name: 'Первые шаги', desc: '10 анализов', icon: '🌱', target: 10 },
+            { id: 'hunter', name: 'Охотник', desc: '50 анализов', icon: '🎯', target: 50 },
+            { id: 'genius', name: 'Гений', desc: '100 анализов', icon: '🧠', target: 100 },
+            { id: 'streak7', name: 'Неделя', desc: '7 дней подряд', icon: '🔥', target: 7, type: 'streak' },
+            { id: 'streak30', name: 'Месяц', desc: '30 дней подряд', icon: '💪', target: 30, type: 'streak' },
+            { id: 'viral', name: 'Вирусолог', desc: '5 роликов >1м', icon: '🦠', target: 5, type: 'viral' }
+        ];
+
+        try { compData = JSON.parse(localStorage.getItem('g_comp')) || []; } catch(e) {}
+        try { myData = JSON.parse(localStorage.getItem('g_my')) || []; } catch(e) {}
+        try { stats = JSON.parse(localStorage.getItem('g_stats')) || { streak: 0, last: null, unlocked: [], days: {} }; } catch(e) { stats = { streak: 0, last: null, unlocked: [], days: {} }; }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStreak();
+            render();
+            updateStats();
+            updateStreakDays();
+            checkAch();
+        });
+
+        document.addEventListener('paste', function(e) {
+            var modal = document.getElementById('modal');
+            if (!modal.classList.contains('show')) return;
+            var items = e.clipboardData.items;
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    var reader = new FileReader();
+                    reader.onload = function(ev) {
+                        document.getElementById('f-visual').value = ev.target.result;
+                        document.getElementById('visual-preview').innerHTML = '<img src="' + ev.target.result + '" class="visual-preview">';
+                    };
+                    reader.readAsDataURL(items[i].getAsFile());
+                    break;
+                }
+            }
+        });
+
+        function handleVisual(input) {
+            var file = input.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('f-visual').value = e.target.result;
+                document.getElementById('visual-preview').innerHTML = '<img src="' + e.target.result + '" class="visual-preview">';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateStreak() {
+            var today = new Date().toISOString().split('T')[0];
+            var yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+            if (stats.last === today) return;
+            if (stats.last === yesterday) stats.streak++;
+            else if (stats.last !== today) stats.streak = 1;
+            stats.last = today;
+            stats.days[today] = stats.days[today] || 0;
+            saveStats();
+        }
+
+        function updateStreakDays() {
+            var el = document.getElementById('streak-days');
+            var html = '';
+            var today = new Date();
+            for (var i = 6; i >= 0; i--) {
+                var d = new Date(today);
+                d.setDate(d.getDate() - i);
+                var ds = d.toISOString().split('T')[0];
+                var num = d.getDate();
+                var active = stats.days[ds] > 0;
+                var isToday = i === 0;
+                html += '<div class="streak-day' + (active ? ' active' : '') + (isToday ? ' today' : '') + '">' + num + '</div>';
+            }
+            el.innerHTML = html;
+            document.getElementById('streak-num').textContent = stats.streak;
+        }
+
+        function recordActivity() {
+            var today = new Date().toISOString().split('T')[0];
+            stats.days[today] = (stats.days[today] || 0) + 1;
+            updateStreak();
+            updateStreakDays();
+        }
+
+        function updateStats() {
+            document.getElementById('stat-comp').textContent = compData.length;
+            document.getElementById('stat-my').textContent = myData.length;
+            document.getElementById('comp-badge').textContent = compData.length;
+            document.getElementById('my-badge').textContent = myData.length;
+            var week = new Date();
+            week.setDate(week.getDate() - 7);
+            var wc = 0;
+            compData.forEach(function(i) { if (new Date(i.date) >= week) wc++; });
+            myData.forEach(function(i) { if (new Date(i.date) >= week) wc++; });
+            document.getElementById('stat-week').textContent = wc;
+        }
+
+        function checkAch() {
+            var total = compData.length + myData.length;
+            var viral = compData.filter(function(i) { return i.views >= 1000000; }).length;
+            achievements.forEach(function(a) {
+                if (stats.unlocked.indexOf(a.id) > -1) return;
+                var prog = a.type === 'streak' ? stats.streak : (a.type === 'viral' ? viral : total);
+                if (prog >= a.target) {
+                    stats.unlocked.push(a.id);
+                    showAchPopup(a.icon, a.name);
+                    confetti();
+                    saveStats();
+                }
+            });
+            document.getElementById('ach-badge').textContent = stats.unlocked.length + '/' + achievements.length;
+        }
+
+        function showAchPopup(icon, text) {
+            var el = document.getElementById('ach-popup');
+            document.getElementById('ach-popup-icon').textContent = icon;
+            document.getElementById('ach-popup-text').textContent = text;
+            el.classList.add('show');
+            setTimeout(function() { el.classList.remove('show'); }, 3000);
+        }
+
+        function confetti() {
+            var box = document.getElementById('confetti');
+            var colors = ['#ff453a', '#ff9f0a', '#ffd60a', '#30d158', '#0a84ff', '#bf5af2'];
+            for (var i = 0; i < 40; i++) {
+                var p = document.createElement('div');
+                p.className = 'confetti-piece';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.background = colors[Math.floor(Math.random() * colors.length)];
+                p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                p.style.animation = 'fall ' + (2 + Math.random() * 2) + 's ease-out forwards';
+                p.style.animationDelay = Math.random() * 0.5 + 's';
+                box.appendChild(p);
+                setTimeout(function(el) { el.remove(); }.bind(null, p), 4000);
+            }
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab').forEach(function(t) {
+                t.classList.toggle('active', t.dataset.tab === tab);
+            });
+            document.getElementById('comp-content').style.display = tab === 'comp' ? 'block' : 'none';
+            document.getElementById('my-content').style.display = tab === 'my' ? 'block' : 'none';
+            render();
+        }
+
+        function setView(v) {
+            currentView = v;
+            document.querySelectorAll('.view-btn').forEach(function(b) {
+                b.classList.toggle('active', b.dataset.v === v);
+            });
+            render();
+        }
+
+        function render() {
+            renderCards('comp', compData);
+            renderCards('my', myData);
+            renderTable('comp', compData);
+            renderTable('my', myData);
+        }
+
+        function renderCards(type, data) {
+            var el = document.getElementById(type + '-cards');
+            var isVisible = currentView === 'cards';
+            el.classList.toggle('hidden', !isVisible);
+            if (!isVisible) return;
+
+            if (data.length === 0) {
+                el.innerHTML = '<div class="empty"><div class="empty-icon">' + (type === 'comp' ? '👥' : '🎬') + '</div><div class="empty-text">Добавь первый анализ</div></div>';
+                return;
+            }
+            var html = '';
+            data.forEach(function(item) {
+                html += '<div class="card">';
+                html += '<div class="card-header">';
+                html += '<span class="card-date">' + formatDate(item.date) + '</span>';
+                if (item.format) html += '<span class="card-tag">' + esc(item.format) + '</span>';
+                html += '</div>';
+                html += '<div class="card-hook">' + esc(item.hook) + '</div>';
+                
+                if (item.visual) html += '<img src="' + item.visual + '" class="card-visual">';
+                
+                var hasStats = item.views || item.shares || item.comments || item.subs;
+                if (hasStats) {
+                    html += '<div class="card-stats">';
+                    if (item.views) html += '<div class="stat views">👀 <span>' + formatNum(item.views) + '</span></div>';
+                    if (item.shares) html += '<div class="stat shares">🔄 <span>' + formatNum(item.shares) + '</span></div>';
+                    if (item.comments) html += '<div class="stat comments">💬 <span>' + formatNum(item.comments) + '</span></div>';
+                    if (item.subs) html += '<div class="stat subs">➕ <span>' + formatNum(item.subs) + '</span></div>';
+                    html += '</div>';
+                }
+                
+                if (item.insight) html += '<div class="card-insight">' + esc(item.insight) + '</div>';
+                if (item.idea) html += '<div class="card-idea"><div class="card-idea-label">Моя идея</div>' + esc(item.idea) + '</div>';
+                
+                html += '<div class="card-actions">';
+                if (item.link) html += '<button class="card-btn open" onclick="openLink(\'' + esc(item.link) + '\')">Открыть Reels</button>';
+                html += '<button class="card-btn edit" onclick="edit(\'' + type + '\', \'' + item.id + '\')">✏️</button>';
+                html += '<button class="card-btn delete" onclick="del(\'' + type + '\', \'' + item.id + '\')">🗑️</button>';
+                html += '</div>';
+                html += '</div>';
+            });
+            el.innerHTML = html;
+        }
+
+        function renderTable(type, data) {
+            var el = document.getElementById(type + '-table');
+            var isVisible = currentView === 'table';
+            el.classList.toggle('visible', isVisible);
+            if (!isVisible) return;
+
+            if (data.length === 0) {
+                el.innerHTML = '<div class="empty"><div class="empty-icon">' + (type === 'comp' ? '👥' : '🎬') + '</div><div class="empty-text">Добавь первый анализ</div></div>';
+                return;
+            }
+
+            var html = '<table class="data-table"><thead><tr>';
+            if (type === 'comp') {
+                html += '<th>Дата</th><th>Хук</th><th>Формат</th><th>👀</th><th>🔄</th><th>💬</th><th>Ссылка</th><th></th>';
+            } else {
+                html += '<th>Дата</th><th>Хук</th><th>👀</th><th>➕</th><th>Ссылка</th><th></th>';
+            }
+            html += '</tr></thead><tbody>';
+
+            data.forEach(function(item) {
+                html += '<tr>';
+                html += '<td>' + formatDate(item.date) + '</td>';
+                html += '<td class="hook-cell">' + esc(item.hook) + '</td>';
+                
+                if (type === 'comp') {
+                    html += '<td>' + (item.format ? esc(item.format) : '—') + '</td>';
+                    html += '<td class="num-cell views">' + formatNum(item.views) + '</td>';
+                    html += '<td class="num-cell shares">' + formatNum(item.shares) + '</td>';
+                    html += '<td class="num-cell comments">' + formatNum(item.comments) + '</td>';
+                } else {
+                    html += '<td class="num-cell views">' + formatNum(item.views) + '</td>';
+                    html += '<td class="num-cell subs">' + formatNum(item.subs) + '</td>';
+                }
+                
+                html += '<td>' + (item.link ? '<a href="' + esc(item.link) + '" target="_blank" class="table-link">Открыть</a>' : '—') + '</td>';
+                html += '<td><div class="table-actions">';
+                html += '<button class="table-action" onclick="edit(\'' + type + '\', \'' + item.id + '\')">✏️</button>';
+                html += '<button class="table-action del" onclick="del(\'' + type + '\', \'' + item.id + '\')">🗑️</button>';
+                html += '</div></td>';
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            el.innerHTML = html;
+        }
+
+        function openLink(url) {
+            window.open(url, '_blank');
+        }
+
+        function openModal() {
+            document.getElementById('modal-title').textContent = 'Новый анализ';
+            document.getElementById('form').reset();
+            document.getElementById('edit-id').value = '';
+            document.getElementById('edit-type').value = currentTab;
+            document.getElementById('f-format').value = '';
+            document.getElementById('f-visual').value = '';
+            document.getElementById('custom-format').value = '';
+            document.getElementById('visual-preview').innerHTML = '<div class="visual-upload-icon">📷</div><div class="visual-upload-text">Нажми чтобы загрузить</div>';
+            document.querySelectorAll('.tag-btn').forEach(function(t) { t.classList.remove('selected'); });
+            
+            var isComp = currentTab === 'comp';
+            document.getElementById('stats-row').style.display = isComp ? 'flex' : 'none';
+            document.getElementById('my-stats-row').style.display = isComp ? 'none' : 'flex';
+            document.getElementById('format-group').style.display = isComp ? 'block' : 'none';
+            document.getElementById('idea-group').style.display = isComp ? 'block' : 'none';
+            document.getElementById('visual-group').style.display = isComp ? 'block' : 'none';
+            
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
+        }
+
+        function selectTag(btn) {
+            document.querySelectorAll('.tag-btn').forEach(function(t) { t.classList.remove('selected'); });
+            btn.classList.add('selected');
+            document.getElementById('f-format').value = btn.dataset.v;
+            document.getElementById('custom-format').value = '';
+        }
+
+        function onCustomFormat() {
+            var val = document.getElementById('custom-format').value.trim();
+            if (val) {
+                document.querySelectorAll('.tag-btn').forEach(function(t) { t.classList.remove('selected'); });
+                document.getElementById('f-format').value = val;
+            }
+        }
+
+        function edit(type, id) {
+            var data = type === 'comp' ? compData : myData;
+            var item = data.find(function(i) { return i.id === id; });
+            if (!item) return;
+
+            document.getElementById('modal-title').textContent = 'Редактировать';
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-type').value = type;
+            document.getElementById('f-hook').value = item.hook;
+            document.getElementById('f-link').value = item.link || '';
+            document.getElementById('f-insight').value = item.insight || '';
+            document.getElementById('f-visual').value = item.visual || '';
+            
+            if (item.visual) {
+                document.getElementById('visual-preview').innerHTML = '<img src="' + item.visual + '" class="visual-preview">';
+            } else {
+                document.getElementById('visual-preview').innerHTML = '<div class="visual-upload-icon">📷</div><div class="visual-upload-text">Нажми чтобы загрузить</div>';
+            }
+            
+            var isComp = type === 'comp';
+            document.getElementById('stats-row').style.display = isComp ? 'flex' : 'none';
+            document.getElementById('my-stats-row').style.display = isComp ? 'none' : 'flex';
+            document.getElementById('format-group').style.display = isComp ? 'block' : 'none';
+            document.getElementById('idea-group').style.display = isComp ? 'block' : 'none';
+            document.getElementById('visual-group').style.display = isComp ? 'block' : 'none';
+
+            if (isComp) {
+                document.getElementById('f-views').value = item.views ? formatNum(item.views) : '';
+                document.getElementById('f-shares').value = item.shares ? formatNum(item.shares) : '';
+                document.getElementById('f-comments').value = item.comments ? formatNum(item.comments) : '';
+                document.getElementById('f-format').value = item.format || '';
+                document.getElementById('f-idea').value = item.idea || '';
+                
+                var presetFormats = ['Голова', 'Сплит', 'B-roll', 'Диалог'];
+                var isPreset = presetFormats.indexOf(item.format) > -1;
+                
+                document.querySelectorAll('.tag-btn').forEach(function(t) {
+                    t.classList.toggle('selected', t.dataset.v === item.format);
+                });
+                
+                if (item.format && !isPreset) {
+                    document.getElementById('custom-format').value = item.format;
+                } else {
+                    document.getElementById('custom-format').value = '';
+                }
+            } else {
+                document.getElementById('f-my-views').value = item.views ? formatNum(item.views) : '';
+                document.getElementById('f-subs').value = item.subs ? formatNum(item.subs) : '';
+            }
+
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function save() {
+            var hook = document.getElementById('f-hook').value.trim();
+            if (!hook) { alert('Введи хук'); return; }
+
+            var editId = document.getElementById('edit-id').value;
+            var type = document.getElementById('edit-type').value;
+            var isEdit = editId !== '';
+            var isComp = type === 'comp';
+
+            var entry = {
+                id: isEdit ? editId : Date.now().toString(),
+                date: new Date().toISOString().split('T')[0],
+                hook: hook,
+                link: document.getElementById('f-link').value.trim(),
+                insight: document.getElementById('f-insight').value.trim()
+            };
+
+            if (isComp) {
+                entry.views = parseNum(document.getElementById('f-views').value);
+                entry.shares = parseNum(document.getElementById('f-shares').value);
+                entry.comments = parseNum(document.getElementById('f-comments').value);
+                entry.format = document.getElementById('f-format').value;
+                entry.idea = document.getElementById('f-idea').value.trim();
+                entry.visual = document.getElementById('f-visual').value;
+            } else {
+                entry.views = parseNum(document.getElementById('f-my-views').value);
+                entry.subs = parseNum(document.getElementById('f-subs').value);
+            }
+
+            var data = isComp ? compData : myData;
+            var key = isComp ? 'g_comp' : 'g_my';
+
+            if (isEdit) {
+                var idx = data.findIndex(function(i) { return i.id === editId; });
+                if (idx > -1) data[idx] = entry;
+            } else {
+                data.unshift(entry);
+                recordActivity();
+                var total = compData.length + myData.length;
+                if ([10, 25, 50, 100].indexOf(total) > -1) confetti();
+            }
+
+            localStorage.setItem(key, JSON.stringify(data));
+            closeModal();
+            render();
+            updateStats();
+            checkAch();
+            toast(isEdit ? 'Сохранено ✓' : 'Добавлено ✓', false);
+        }
+
+        function del(type, id) {
+            var data = type === 'comp' ? compData : myData;
+            var idx = data.findIndex(function(i) { return i.id === id; });
+            if (idx === -1) return;
+            deleted = data[idx];
+            deletedFrom = type;
+            data.splice(idx, 1);
+            localStorage.setItem(type === 'comp' ? 'g_comp' : 'g_my', JSON.stringify(data));
+            render();
+            updateStats();
+            toast('Удалено', true);
+        }
+
+        function undo() {
+            if (!deleted) return;
+            var data = deletedFrom === 'comp' ? compData : myData;
+            data.unshift(deleted);
+            localStorage.setItem(deletedFrom === 'comp' ? 'g_comp' : 'g_my', JSON.stringify(data));
+            deleted = null;
+            deletedFrom = null;
+            hideToast();
+            render();
+            updateStats();
+        }
+
+        function toast(text, showUndo) {
+            var el = document.getElementById('toast');
+            document.getElementById('toast-text').textContent = text;
+            document.getElementById('toast-undo').style.display = showUndo ? 'inline-block' : 'none';
+            clearTimeout(toastTimer);
+            el.classList.add('show');
+            toastTimer = setTimeout(hideToast, showUndo ? 4000 : 2000);
+        }
+
+        function hideToast() {
+            document.getElementById('toast').classList.remove('show');
+        }
+
+        function openAchievements() {
+            var grid = document.getElementById('ach-grid');
+            var total = compData.length + myData.length;
+            var viral = compData.filter(function(i) { return i.views >= 1000000; }).length;
+            var html = '';
+            achievements.forEach(function(a) {
+                var unlocked = stats.unlocked.indexOf(a.id) > -1;
+                var prog = a.type === 'streak' ? stats.streak : (a.type === 'viral' ? viral : total);
+                var pct = Math.min(100, (prog / a.target) * 100);
+                html += '<div class="ach-item ' + (unlocked ? 'unlocked' : 'locked') + '">';
+                html += '<div class="ach-icon">' + a.icon + '</div>';
+                html += '<div class="ach-name">' + a.name + '</div>';
+                html += '<div class="ach-desc">' + a.desc + '</div>';
+                if (!unlocked) html += '<div class="ach-bar"><div class="ach-bar-fill" style="width:' + pct + '%"></div></div>';
+                html += '</div>';
+            });
+            grid.innerHTML = html;
+            document.getElementById('ach-modal').classList.add('show');
+        }
+
+        function closeAchModal() {
+            document.getElementById('ach-modal').classList.remove('show');
+        }
+
+        function openTop() {
+            renderTop();
+            document.getElementById('top-modal').classList.add('show');
+        }
+
+        function closeTopModal() {
+            document.getElementById('top-modal').classList.remove('show');
+        }
+
+        function switchTopTab(tab) {
+            topTab = tab;
+            document.querySelectorAll('.top-tab').forEach(function(t) {
+                t.classList.toggle('active', t.dataset.t === tab);
+            });
+            var chips = document.querySelectorAll('[data-s="shares"], [data-s="comments"]');
+            chips.forEach(function(c) { c.style.display = tab === 'my' ? 'none' : ''; });
+            if (tab === 'my' && (sortBy === 'shares' || sortBy === 'comments')) {
+                setSort('views');
+            }
+            renderTop();
+        }
+
+        function setSort(s) {
+            sortBy = s;
+            document.querySelectorAll('.filter-chip').forEach(function(c) {
+                c.classList.toggle('active', c.dataset.s === s);
+            });
+            renderTop();
+        }
+
+        function renderTop() {
+            var data = (topTab === 'comp' ? compData : myData).slice();
+            var list = document.getElementById('top-list');
+            
+            if (data.length === 0) {
+                list.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Пусто</div></div>';
+                return;
+            }
+
+            data.sort(function(a, b) {
+                return (b[sortBy] || 0) - (a[sortBy] || 0);
+            });
+
+            var html = '';
+            data.slice(0, 15).forEach(function(item, i) {
+                var rc = i === 0 ? 'r1' : (i === 1 ? 'r2' : (i === 2 ? 'r3' : ''));
+                html += '<div class="top-item">';
+                html += '<div class="top-rank ' + rc + '">' + (i + 1) + '</div>';
+                html += '<div class="top-content">';
+                html += '<div class="top-hook">' + esc(item.hook) + '</div>';
+                html += '<div class="top-stats">';
+                if (sortBy === 'views') html += '👀 ' + formatNum(item.views);
+                else if (sortBy === 'shares') html += '🔄 ' + formatNum(item.shares);
+                else if (sortBy === 'comments') html += '💬 ' + formatNum(item.comments);
+                if (item.subs && topTab === 'my') html += ' · ➕ ' + formatNum(item.subs);
+                html += '</div>';
+                html += '</div></div>';
+            });
+            list.innerHTML = html;
+        }
+
+        function openSettings() {
+            document.getElementById('settings-modal').classList.add('show');
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settings-modal').classList.remove('show');
+        }
+
+        function exportJSON() {
+            var data = {
+                version: '6.0',
+                exported: new Date().toISOString(),
+                competitors: compData,
+                myContent: myData,
+                stats: stats
+            };
+            var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            if (navigator.share) {
+                var file = new File([blob], 'genius-backup.json', { type: 'application/json' });
+                navigator.share({ files: [file] }).catch(function() {
+                    downloadBlob(blob, 'genius-backup.json');
+                });
+            } else {
+                downloadBlob(blob, 'genius-backup.json');
+            }
+            toast('Экспорт ✓', false);
+        }
+
+        function importJSON(input) {
+            var file = input.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    var data = JSON.parse(e.target.result);
+                    if (data.competitors) compData = data.competitors;
+                    if (data.myContent) myData = data.myContent;
+                    if (data.stats) stats = data.stats;
+                    localStorage.setItem('g_comp', JSON.stringify(compData));
+                    localStorage.setItem('g_my', JSON.stringify(myData));
+                    saveStats();
+                    render();
+                    updateStats();
+                    updateStreakDays();
+                    checkAch();
+                    closeSettingsModal();
+                    toast('Импорт ✓', false);
+                } catch(err) {
+                    alert('Ошибка импорта');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function clearAll() {
+            if (!confirm('Удалить ВСЕ данные?')) return;
+            compData = [];
+            myData = [];
+            stats = { streak: 0, last: null, unlocked: [], days: {} };
+            localStorage.removeItem('g_comp');
+            localStorage.removeItem('g_my');
+            localStorage.removeItem('g_stats');
+            render();
+            updateStats();
+            updateStreakDays();
+            closeSettingsModal();
+            toast('Очищено', false);
+        }
+
+        function exportCSV() {
+            var data = currentTab === 'comp' ? compData : myData;
+            if (data.length === 0) { toast('Нет данных', false); return; }
+
+            var csv = '\uFEFF';
+            if (currentTab === 'comp') {
+                csv += 'Дата,Ссылка,Хук,Формат,Просмотры,Репосты,Комментарии,Инсайт,Идея\n';
+                data.forEach(function(item) {
+                    csv += '"' + item.date + '","' + (item.link||'') + '","' + csvEsc(item.hook) + '","' + (item.format||'') + '",' + (item.views||0) + ',' + (item.shares||0) + ',' + (item.comments||0) + ',"' + csvEsc(item.insight) + '","' + csvEsc(item.idea) + '"\n';
+                });
+            } else {
+                csv += 'Дата,Ссылка,Хук,Просмотры,Подписчики,Инсайт\n';
+                data.forEach(function(item) {
+                    csv += '"' + item.date + '","' + (item.link||'') + '","' + csvEsc(item.hook) + '",' + (item.views||0) + ',' + (item.subs||0) + ',"' + csvEsc(item.insight) + '"\n';
+                });
+            }
+
+            var blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+            var filename = 'genius_' + currentTab + '.csv';
+            if (navigator.share) {
+                var file = new File([blob], filename, { type: 'text/csv' });
+                navigator.share({ files: [file] }).catch(function() {
+                    downloadBlob(blob, filename);
+                });
+            } else {
+                downloadBlob(blob, filename);
+            }
+            toast('Экспорт ✓', false);
+        }
+
+        function downloadBlob(blob, name) {
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = name;
+            a.click();
+        }
+
+        function saveStats() {
+            localStorage.setItem('g_stats', JSON.stringify(stats));
+        }
+
+        function parseNum(s) {
+            if (!s) return 0;
+            s = String(s).toLowerCase().replace(/\s/g, '').replace(/м|m/g, 'm').replace(/к|k/g, 'k');
+            if (s.indexOf('m') > -1) return Math.round(parseFloat(s) * 1000000);
+            if (s.indexOf('k') > -1) return Math.round(parseFloat(s) * 1000);
+            return parseInt(s.replace(/\D/g, '')) || 0;
+        }
+
+        function formatNum(n) {
+            if (!n) return '0';
+            n = parseInt(n);
+            if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'м';
+            if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'к';
+            return String(n);
+        }
+
+        function formatDate(s) {
+            if (!s) return '';
+            var d = new Date(s);
+            var m = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+            return d.getDate() + ' ' + m[d.getMonth()];
+        }
+
+        function esc(s) {
+            if (!s) return '';
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function csvEsc(s) {
+            return s ? String(s).replace(/"/g, '""') : '';
+        }
+
+        document.querySelectorAll('.modal-bg').forEach(function(m) {
+            m.addEventListener('click', function(e) {
+                if (e.target === m) m.classList.remove('show');
+            });
+        });
+    </script>
+</body>
+</html>
